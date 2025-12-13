@@ -38,11 +38,19 @@ const certifications = [
     title: "Internal Hackathon Winner - IMS Noida",
     description: "Secured 2nd place at the IMS Noida Internal Hackathon with the AI-based travel planner project 'Triply'.",
     image: "/hackthon.jpg",
-  },{
+  },
+  {
   id: 7,
   title: "Meta Front-End Developer Professional Certificate (React)",
   description: "Successfully completed the Meta Front-End Developer Professional Certificate, with a strong focus on building user interfaces using React.",
-  image: "/react.jpg" }
+  image: "/react.jpg" },
+  {
+  id: 8,
+  title: "Technology Job Simulation – Deloitte Australia (Forage)",
+  description:
+    "Completed Deloitte Australia’s Technology Job Simulation on Forage. Gained hands-on experience in the software development lifecycle, built a Python-based dashboard to visualize telemetry data, and prepared a formal client proposal covering scope, timeline, and technical requirements.",
+  image: "/deloitte.jpg",
+}
   
 ];
 
