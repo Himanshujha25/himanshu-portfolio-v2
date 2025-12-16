@@ -1,43 +1,42 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaRobot, FaTimes, FaPaperPlane, FaSun, FaMoon } from "react-icons/fa";
 
-// ---------------------------
-// RENDER MESSAGE (CODE + LINKS)
-// ---------------------------
+/* ---------------------------
+   MESSAGE RENDERER
+--------------------------- */
 const renderMessage = (text) => {
   // CODE BLOCK
   if (text.includes("```")) {
-    const code = text.replace(/```/g, "");
+    const code = text.split("```")[1] || "";
     return (
-      <pre className="bg-black text-green-400 p-3 rounded-lg text-sm overflow-auto">
+        <pre className="bg-black text-green-400 p-3 rounded-lg text-sm overflow-x-auto">
         {code}
       </pre>
     );
   }
 
-  // LINK DETECTION
+  // LINK DETECTION (SAFE)
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-
   const parts = text.split(urlRegex);
 
   return (
-    <span>
-      {parts.map((part, i) =>
-        urlRegex.test(part) ? (
-          <a
-            key={i}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-400 underline break-all"
-          >
-            {part}
-          </a>
-        ) : (
-          part
-        )
-      )}
-    </span>
+      <>
+        {parts.map((part, i) =>
+            part.match(urlRegex) ? (
+                <a
+                    key={i}
+                    href={part}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 underline break-all"
+                >
+                  {part}
+                </a>
+            ) : (
+                <span key={i}>{part}</span>
+            )
+        )}
+      </>
   );
 };
 
@@ -45,14 +44,6 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [theme, setTheme] = useState("dark");
-
-  const [messages, setMessages] = useState([
-    {
-      from: "bot",
-      text: "Hello! I am Himanshu’s personal AI assistant. I can tell you about Himanshu's skills, projects, experience, and portfolio details. How can I help you today?",
-    },
-  ]);
-
   const [typing, setTyping] = useState(false);
   const [blink, setBlink] = useState(true);
   const [tooltip, setTooltip] = useState(true);
@@ -60,217 +51,199 @@ const ChatBot = () => {
 
   const chatEndRef = useRef(null);
 
-  // Scroll to bottom
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const [messages, setMessages] = useState([
+    {
+      from: "bot",
+      text:
+          "Hi 👋 I’m Himanshu’s AI assistant. You can ask me about his skills, projects, experience, or contact details.",
+    },
+  ]);
+
+  /* ---------------------------
+     AUTO SCROLL
+  --------------------------- */
   useEffect(() => {
-    scrollToBottom();
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  // ---------------------------
-  // ONLY WELCOME VOICE
-  // ---------------------------
-  const speakWelcome = () => {
-    const msg = new SpeechSynthesisUtterance(
-      "Welcome to my portfolio. You can explore everything I have built. If you want me to stop and continue manually, click the AI icon."
-    );
-    msg.pitch = 1;
-    msg.rate = 1;
-    msg.volume = 1;
-    speechSynthesis.speak(msg);
-  };
-
+  /* ---------------------------
+     WELCOME VOICE
+  --------------------------- */
   useEffect(() => {
-    setTimeout(() => speakWelcome(), 600);
+    const msg = new SpeechSynthesisUtterance(
+        "Welcome to my portfolio. Click the AI icon to explore my work."
+    );
+    setTimeout(() => speechSynthesis.speak(msg), 600);
 
-    setTimeout(() => setBlink(false), 10000);
+    setTimeout(() => setBlink(false), 9000);
     setTimeout(() => setTooltip(false), 6000);
-    setTimeout(() => setNotify(false), 9000);
+    setTimeout(() => setNotify(false), 8000);
   }, []);
 
-  // ---------------------------
-  // BACKEND CALL
-  // ---------------------------
-  const sendToBackend = async (userMessage) => {
+  /* ---------------------------
+     BACKEND CALL
+  --------------------------- */
+  const sendToBackend = async (message) => {
     try {
       const res = await fetch(
-        "https://himanshu-portfolio-6bd7.onrender.com/api/chat",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: userMessage }),
-        }
+          "https://himanshu-portfolio-6bd7.onrender.com/api/chat",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+          }
       );
-
       const data = await res.json();
       return data.reply;
-    } catch (error) {
-      return "Backend is not responding right now. Please try again later!";
+    } catch {
+      return "⚠️ Server not responding. Please try again later.";
     }
   };
 
-  // ---------------------------
-  // SEND MESSAGE
-  // ---------------------------
-  const handleSend = async () => {
-    if (input.trim() === "") return;
+  /* ---------------------------
+     SEND MESSAGE
+  --------------------------- */
+  const sendMessage = async (message) => {
+    if (!message.trim()) return;
 
-    const userMessage = input;
-    setMessages((prev) => [...prev, { from: "user", text: input }]);
-    setInput("");
-
+    setMessages((prev) => [...prev, { from: "user", text: message }]);
     setTyping(true);
 
-    const backendReply = await sendToBackend(userMessage);
+    const reply = await sendToBackend(message);
 
-    setTimeout(() => {
-      setTyping(false);
-      setMessages((prev) => [...prev, { from: "bot", text: backendReply }]);
-      // ❌ Voice disabled for replies
-    }, 600);
+    setTyping(false);
+    setMessages((prev) => [...prev, { from: "bot", text: reply }]);
   };
 
-  // ---------------------------
-  // QUICK QUESTIONS
-  // ---------------------------
+  const handleSend = () => {
+    sendMessage(input);
+    setInput("");
+  };
+
+  /* ---------------------------
+     QUICK QUESTIONS
+  --------------------------- */
   const quickQuestions = [
-    "Show me Himanshu's projects",
+    "Show Himanshu's projects",
     "What skills does Himanshu have?",
-    "How to contact Himanshu?",
+    "How can I contact Himanshu?",
   ];
 
-  // THEME COLORS
+  /* ---------------------------
+     THEMES
+  --------------------------- */
   const themes = {
-    dark: "bg-[#1D1836] text-white border-gray-600",
-    light: "bg-white text-black border-gray-300",
-    gold: "bg-[#2b2410] text-yellow-300 border-yellow-600",
+    dark: "bg-[#1D1836] text-white",
+    light: "bg-white text-black",
+    gold: "bg-[#2b2410] text-yellow-300",
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-[999]">
-
-      {/* Tooltip */}
-      {tooltip && !isOpen && (
-        <div className="absolute bottom-20 right-2 bg-black text-white text-xs px-3 py-1 rounded-md animate-pulse shadow-lg">
-          Need help? Click here
-        </div>
-      )}
-
-      {/* Notification */}
-      {notify && !isOpen && (
-        <div className="absolute bottom-28 right-[-5px] bg-yellow-400 text-black text-xs px-3 py-1 rounded-md shadow-lg animate-bounce">
-          Ask me anything!
-        </div>
-      )}
-
-      {isOpen ? (
-        <div
-          className={`w-80 h-[520px] rounded-2xl shadow-2xl flex flex-col animate-fadeIn border ${themes[theme]}`}
-        >
-          {/* HEADER */}
-          <div className="p-4 flex justify-between items-center rounded-t-2xl bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black">
-            <span className="font-semibold text-lg">AI Chat Assistant</span>
-
-            <div className="flex items-center gap-3">
-              <button
-                className="text-black"
-                onClick={() =>
-                  setTheme(
-                    theme === "dark"
-                      ? "light"
-                      : theme === "light"
-                      ? "gold"
-                      : "dark"
-                  )
-                }
-              >
-                {theme === "dark" ? <FaSun /> : <FaMoon />}
-              </button>
-
-              <FaTimes
-                className="cursor-pointer hover:scale-110 transition"
-                onClick={() => setIsOpen(false)}
-              />
+      <div className="fixed bottom-5 right-5 z-[999]">
+        {tooltip && !isOpen && (
+            <div className="absolute bottom-20 right-2 bg-black text-white text-xs px-3 py-1 rounded-md animate-pulse">
+              Need help?
             </div>
-          </div>
+        )}
 
-          {/* CHAT MESSAGES */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`p-3 rounded-xl max-w-[85%] break-words whitespace-pre-wrap leading-relaxed shadow ${
-                  msg.from === "user"
-                    ? "bg-[#FFD700] text-black ml-auto"
-                    : "bg-gray-700 text-white"
-                }`}
-              >
-                {renderMessage(msg.text)}
-              </div>
-            ))}
+        {notify && !isOpen && (
+            <div className="absolute bottom-28 right-0 bg-yellow-400 text-black text-xs px-3 py-1 rounded-md animate-bounce">
+              Ask me anything!
+            </div>
+        )}
 
-            {typing && (
-              <div className="bg-gray-700 text-white px-4 py-2 rounded-xl inline-block">
-                <div className="flex space-x-1">
-                  <span className="animate-pulse">●</span>
-                  <span className="animate-pulse delay-150">●</span>
-                  <span className="animate-pulse delay-300">●</span>
+        {isOpen ? (
+            <div
+                className={`w-80 h-[520px] rounded-2xl shadow-2xl flex flex-col border ${themes[theme]}`}
+            >
+              {/* HEADER */}
+              <div className="p-4 flex justify-between items-center rounded-t-2xl bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black">
+                <span className="font-semibold text-lg">AI Assistant</span>
+                <div className="flex gap-3">
+                  <button
+                      onClick={() =>
+                          setTheme(theme === "dark" ? "light" : theme === "light" ? "gold" : "dark")
+                      }
+                  >
+                    {theme === "dark" ? <FaSun /> : <FaMoon />}
+                  </button>
+                  <FaTimes
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setIsOpen(false);
+                        speechSynthesis.cancel();
+                      }}
+                  />
                 </div>
               </div>
-            )}
 
-            <div ref={chatEndRef}></div>
-          </div>
+              {/* CHAT */}
+              <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                {messages.map((msg, i) => (
+                    <div
+                        key={i}
+                        className={`p-3 rounded-xl max-w-[85%] text-sm shadow ${
+                            msg.from === "user"
+                                ? "ml-auto bg-[#FFD700] text-black"
+                                : "bg-gray-700 text-white"
+                        }`}
+                    >
+                      {renderMessage(msg.text)}
+                    </div>
+                ))}
 
-          {/* QUICK QUESTIONS */}
-          <div className="p-2 flex gap-2 overflow-x-auto">
-            {quickQuestions.map((q, i) => (
-              <button
-                key={i}
-                className="px-3 py-1 rounded-lg text-xs bg-gray-800 text-white hover:bg-gray-600"
+                {typing && (
+                    <div className="bg-gray-700 text-white px-4 py-2 rounded-xl inline-block">
+                      typing...
+                    </div>
+                )}
+
+                <div ref={chatEndRef} />
+              </div>
+
+              {/* QUICK BUTTONS */}
+              <div className="p-2 flex gap-2 overflow-x-auto">
+                {quickQuestions.map((q, i) => (
+                    <button
+                        key={i}
+                        className="px-3 py-1 rounded-lg text-xs bg-gray-800 text-white"
+                        onClick={() => sendMessage(q)}
+                    >
+                      {q}
+                    </button>
+                ))}
+              </div>
+
+              {/* INPUT */}
+              <div className="p-3 flex items-center border-t bg-[#16122a] rounded-b-2xl">
+                <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                    placeholder="Type your message..."
+                    className="flex-1 p-2 rounded-lg bg-gray-800 text-white outline-none"
+                />
+                <FaPaperPlane
+                    className="ml-3 text-yellow-400 cursor-pointer"
+                    onClick={handleSend}
+                />
+              </div>
+            </div>
+        ) : (
+            <button
+                className={`bg-gradient-to-r from-[#FFD700] to-[#FFA500] p-4 rounded-full shadow-xl ${
+                    blink ? "animate-bounce" : ""
+                }`}
                 onClick={() => {
-                  setInput(q);
-                  handleSend();
+                  setIsOpen(true);
+                  setBlink(false);
+                  speechSynthesis.cancel();
                 }}
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-
-          {/* INPUT */}
-          <div className="p-3 flex items-center border-t border-gray-600 bg-[#16122a] rounded-b-2xl">
-            <input
-              type="text"
-              placeholder="Type your message..."
-              className="flex-1 p-2 rounded-lg bg-gray-800 text-white outline-none border border-gray-700 focus:border-[#FFD700]"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            />
-            <FaPaperPlane
-              className="ml-3 text-yellow-400 cursor-pointer hover:scale-110 transition"
-              size={22}
-              onClick={handleSend}
-            />
-          </div>
-        </div>
-      ) : (
-        <button
-          className={`bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black p-4 rounded-full shadow-xl hover:scale-110 transition-transform 
-          ${blink ? "animate-pulse animate-bounce" : ""}`}
-          onClick={() => {
-            setIsOpen(true);
-            setBlink(false);
-            setTooltip(false);
-            speechSynthesis.cancel();
-          }}
-        >
-          <FaRobot size={26} />
-        </button>
-      )}
-    </div>
+            >
+              <FaRobot size={26} />
+            </button>
+        )}
+      </div>
   );
 };
 

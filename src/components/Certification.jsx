@@ -50,8 +50,16 @@ const certifications = [
   description:
     "Completed Deloitte Australia’s Technology Job Simulation on Forage. Gained hands-on experience in the software development lifecycle, built a Python-based dashboard to visualize telemetry data, and prepared a formal client proposal covering scope, timeline, and technical requirements.",
   image: "/deloitte.jpg",
-}
-  
+},
+  {
+    id: 9,
+    title: "Software Engineering Job Simulation – JPMorgan Chase & Co. (Forage)",
+    description:
+        "Completed the JPMorgan Chase & Co. Software Engineering Job Simulation on Forage. Built and tested a Spring Boot microservice with Apache Kafka for transaction processing, implemented REST APIs, integrated an H2 database using Spring Data JPA, and connected to an external Incentive API. Gained exposure to event-driven architecture and enterprise-level backend workflows.",
+    image: "/jpmorgon.jpg",
+  }
+
+
 ];
 
 function Certification() {

@@ -6,24 +6,26 @@ import { SectionWrapper } from "../hoc";
 import background from "../assets/background.webp";
 
 const educationDetails = [
+
+  {
+    degree: "Secondary Education (10th)",
+    percentage: "65%",
+    institution: "Nutan Vidya Mandir",
+    year: "2020 - 2021",
+  },
   {
     degree: "Bachelor of Computer Applications (BCA)",
     percentage: "Pursuing",
     institution: "IMS Noida",
-    year: "2023 - Present",
+    year: "2024 - Present",
   },
   {
     degree: "Higher Secondary Education (12th)",
     percentage: "65%",
     institution: "Nutan Vidya Mandir",
-    year: "2021 - 2023",
+    year: "2023 - 2024",
   },
-  {
-    degree: "Secondary Education (10th)",
-    percentage: "65%",
-    institution: "Nutan Vidya Mandir",
-    year: "2019 - 2021",
-  },
+
 ];
 
 const EducationCard = ({ degree, percentage, institution, year, index }) => {
