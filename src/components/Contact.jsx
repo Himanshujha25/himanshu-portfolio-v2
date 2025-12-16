@@ -115,7 +115,7 @@ const Contact = () => {
         <p className="text-gray-100 text-sm sm:text-lg">
           © {new Date().getFullYear()} Himanshu Jha. All Rights Reserved.
         </p>
-        <p className="text-gray-200 text-xs sm:text-sm">📩 jhahiamsnhu930@gmail.com</p>
+        <p className="text-gray-200 text-xs sm:text-sm">📩 jhahimanshu930@gmail.com</p>
       </footer>
     </div>
   );
