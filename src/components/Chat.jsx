@@ -95,7 +95,7 @@ const ChatBot = () => {
 
   const sendToBackend = async (message) => {
     try {
-      const res = await fetch("[https://himanshu-portfolio-v2-iv3t.onrender.com/api/chat]( https://himanshu-portfolio-v2-iv3t.onrender.com/api/chat)", {
+      const res = await fetch("https://himanshu-portfolio-v2-iv3t.onrender.com/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
