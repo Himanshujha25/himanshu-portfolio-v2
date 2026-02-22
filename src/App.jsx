@@ -10,6 +10,7 @@ import Education from './components/Education';
 import Certification from './components/Certification';
 import FAQ from './components/Faq';
 import ChatBot from './components/Chat';
+import Experience from "./components/Experience";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Navbar />
           <Hero />
           <About />
+          <Experience />
           <Projects />
           <Tech />
           <Certification />

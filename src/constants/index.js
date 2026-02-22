@@ -98,6 +98,10 @@ import ecommerceIcon from "../assets/company/E-Commerce Platform.webp"
       icon: tailwind,
     },
     {
+    name: "Vue 3",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg",
+  },
+    {
       name: "Node JS",
       icon: nodejs,
     },

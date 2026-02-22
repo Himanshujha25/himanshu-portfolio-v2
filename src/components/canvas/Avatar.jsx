@@ -1,42 +1,65 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { useState } from "react";
+import { OrbitControls, Html, useProgress, Environment, ContactShadows, Float, Sparkles } from "@react-three/drei";
+import { useState, Suspense } from "react";
 import AvatarModel from "./Avtarmodel";
+
+function CanvasLoader() {
+  const { progress } = useProgress();
+  return (
+    <Html center>
+      <div style={{ color: "#a78bfa", fontFamily: "monospace", fontSize: "14px" }}>
+        {progress.toFixed(0)}%
+      </div>
+    </Html>
+  );
+}
 
 export default function Avatar() {
   const [isInteracting, setIsInteracting] = useState(false);
 
   return (
-    <div className="w-full h-[600px] md:h-[720px]">
-      <Canvas
-        shadows
-        camera={{ fov: 30, position: [0, 1.5, 7] }}
-        className="w-full h-full"
-      >
-        <ambientLight intensity={0.65} />
-        <directionalLight position={[6, 10, 6]} intensity={1.3} />
+    <Canvas
+      shadows
+      camera={{ position: [0, 0, 5], fov: 45 }}
+      style={{ width: "100%", height: "100%", background: "transparent" }}
+      gl={{ alpha: true, antialias: true }}
+      onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
+    >
+      <Suspense fallback={<CanvasLoader />}>
+        {/* Lighting */}
+        <Environment preset="city" />
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[5, 10, 5]} intensity={1.2} castShadow />
+        <pointLight position={[-4, 2, -4]} intensity={2} color="#a855f7" />
+        <pointLight position={[4, 0, 2]} intensity={1.5} color="#38bdf8" />
 
-        {/* detect user movement */}
+        {/* Subtle particles */}
+        <Sparkles count={50} scale={4} size={1.2} speed={0.3} color="#a78bfa" opacity={0.4} />
+
+        {/* Gentle floating animation */}
+        <Float speed={2} rotationIntensity={0.15} floatIntensity={0.4}>
+          <AvatarModel isInteracting={isInteracting} />
+        </Float>
+
+        {/* Ground shadow */}
+        <ContactShadows
+          position={[0, -1.6, 0]}
+          opacity={0.4}
+          scale={6}
+          blur={2.5}
+          far={3}
+          color="#7c3aed"
+        />
+
         <OrbitControls
           enableZoom={false}
-          autoRotate={false}
-
-          // LOCK X ROTATION (UP/DOWN)
-          minPolarAngle={Math.PI / 2}  
-          maxPolarAngle={Math.PI / 2}   
-
-          // allow only horizontal rotation
           enablePan={false}
-          rotateSpeed={1}
-
+          minPolarAngle={Math.PI / 3}
+          maxPolarAngle={Math.PI / 1.8}
           onStart={() => setIsInteracting(true)}
           onEnd={() => setIsInteracting(false)}
         />
-
-
-        {/* pass interaction state */}
-        <AvatarModel isInteracting={isInteracting} />
-      </Canvas>
-    </div>
+      </Suspense>
+    </Canvas>
   );
 }

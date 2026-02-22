@@ -24,3 +24,36 @@ html {
       rgba(0, 0, 0, 0) 70%
     );
   }
+
+
+  /* =========================================
+   CUSTOM PREMIUM SCROLLBAR
+   ========================================= */
+
+/* For Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+  width: 10px; /* Slim and sleek */
+}
+
+::-webkit-scrollbar-track {
+  background: #050816; /* Matches your primary dark background */
+}
+
+::-webkit-scrollbar-thumb {
+  /* A smooth gradient from your brand purple to a bright cyan */
+  background: linear-gradient(to bottom, #915eff, #00cea8);
+  border-radius: 100px;
+  /* Adds a faux-margin so the thumb doesn't touch the very edges of the screen */
+  border: 3px solid #050816; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  /* Gets brighter when the user hovers over it */
+  background: linear-gradient(to bottom, #a855f7, #2dd4bf); 
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #915eff #050816;
+}

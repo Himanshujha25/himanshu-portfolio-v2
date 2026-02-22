@@ -2,10 +2,29 @@ import React from "react";
 import { styles } from "../styles";
 import { motion } from "framer-motion";
 import { fadeIn, textVariant } from "../utils/motion";
-import { services } from "../constants";
 import { Tilt } from "react-tilt";
 import { SectionWrapper } from "../hoc";
 import background from "../assets/background.webp";
+
+// High-quality, official SVG logos loaded from Devicon CDN
+const techCards = [
+  {
+    title: "React Developer",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+  },
+  {
+    title: "Node.js Backend",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+  },
+  {
+    title: "Vue.js Developer",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg",
+  },
+  {
+    title: "MongoDB",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
+  }
+];
 
 const ServiceCard = ({ index, title, icon }) => {
   return (
@@ -21,9 +40,9 @@ const ServiceCard = ({ index, title, icon }) => {
           <img
             src={icon}
             alt={title}
-            className="w-20 h-20 object-contain filter drop-shadow-[0_0_15px_rgba(145,94,255,0.3)]"
+            className="w-20 h-20 object-contain filter group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(145,94,255,0.2)]"
           />
-          <h3 className="text-white text-[20px] font-bold text-center bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF6B6B] bg-clip-text text-transparent">
+          <h3 className="text-white text-[20px] font-bold text-center bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF6B6B] bg-clip-text text-transparent mt-4">
             {title}
           </h3>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#915eff10_0%,_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -45,11 +64,8 @@ function About() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Background Overlay */}
-     
-      
       {/* Animated Particles */}
-      <div className="absolute inset-0 opacity-40">
+      <div className="absolute inset-0 opacity-40 pointer-events-none">
         {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
@@ -73,17 +89,17 @@ function About() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        <motion.div variants={textVariant()} id="about" className="text-center">
+        <motion.div variants={textVariant()} id="about" className="text-center lg:text-left">
           <p className={`${styles.sectionSubText} text-teal-300`}>Introduction</p>
           <h2 className={`${styles.sectionHeadText} mb-12`}>
             Professional <span className="text-[#915eff]">Overview</span>
           </h2>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row gap-12 items-center lg:items-start">
           <motion.div
             variants={fadeIn("", "", 0.1, 1)}
-            className="flex-1 bg-[#1d1836]/70 backdrop-blur-lg rounded-2xl border border-[#ffffff14] p-8 shadow-xl"
+            className="flex-1 bg-[#1d1836]/70 backdrop-blur-lg rounded-2xl border border-[#ffffff14] p-8 shadow-xl w-full"
           >
             <p className="text-gray-300 text-lg leading-[32px] font-light tracking-wide">
               <span className="text-[#915eff] font-medium">🚀 Full-Stack Developer</span> specializing in modern web technologies with expertise in:
@@ -94,12 +110,16 @@ function About() {
                   React & Next.js
                 </li>
                 <li className="flex items-center">
+                  <span className="w-2 h-2 bg-[#41b883] rounded-full mr-2" />
+                  Vue.js
+                </li>
+                <li className="flex items-center">
                   <span className="w-2 h-2 bg-[#FFD700] rounded-full mr-2" />
                   Node.js & Express
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-2" />
-                  MongoDB & PostgreSQL
+                  MongoDB
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-[#00FF88] rounded-full mr-2" />
@@ -107,7 +127,7 @@ function About() {
                 </li>
               </ul>
 
-              With <span className="text-[#915eff]">9+ Month</span> of experience, I've developed a passion for creating:
+              From developing fast-paced prototypes for hackathons like SIH to architecting scalable, in-house enterprise software and complete agency platforms, I've developed a passion for creating:
               
               <div className="mt-6 space-y-4">
                 <div className="flex items-center gap-3">
@@ -126,14 +146,15 @@ function About() {
 
               <div className="mt-8 p-4 bg-[#ffffff08] rounded-xl border border-[#ffffff14]">
                 <span className="text-[#915eff]">Current Focus:</span>{" "}
-                Building enterprise-level MERN stack applications with a focus on performance and user experience.
+                Building enterprise-level full-stack applications with a strict focus on performance and seamless user experience.
               </div>
             </p>
           </motion.div>
 
-          <div className="lg:w-[40%]">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {services.map((service, index) => (
+          <div className="lg:w-[45%] flex justify-center w-full">
+            {/* Added a responsive grid so the cards sit beautifully on mobile and desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-[600px]">
+              {techCards.map((service, index) => (
                 <ServiceCard key={service.title} index={index} {...service} />
               ))}
             </div>
