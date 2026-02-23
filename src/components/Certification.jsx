@@ -6,6 +6,7 @@ import background from "../assets/background.webp";
 import { Award } from "lucide-react";
 
 const certifications = [
+  // ... (keep your exact array of 9 certifications here)
   {
     id: 1,
     title: "HTML Introduction",
@@ -60,35 +61,26 @@ const certifications = [
     description: "Built and tested a Spring Boot microservice with Apache Kafka, implemented REST APIs, integrated an H2 database using Spring Data JPA. Gained exposure to enterprise-level backend workflows.",
     image: "/jpmorgon.jpg",
   }
+  // ... rest of your certs
 ];
 
 const CertCard = ({ cert, index }) => (
   <motion.div
     variants={fadeIn("up", "spring", index * 0.1, 0.75)}
-    /* ADDED: Independent animation triggers to prevent the mobile height bug */
-    initial="hidden"
-    whileInView="show"
-    viewport={{ once: true, amount: 0.1 }}
     className="bg-[#151030]/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(145,94,255,0.3)] hover:border-purple-500/50 group flex flex-col h-full"
   >
-    {/* Image Container with Blending Gradient */}
     <div className="w-full h-[220px] relative overflow-hidden bg-black/40 p-6 flex justify-center items-center">
-      {/* Gradient to blend image into the card body seamlessly */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#151030] via-[#151030]/20 to-transparent z-10" />
-      
       <img
         src={cert.image}
         alt={cert.title}
         className="w-full h-full object-contain relative z-0 group-hover:scale-110 transition-transform duration-500 ease-out"
       />
-      
-      {/* Floating Award Badge */}
       <div className="absolute top-4 right-4 z-20 bg-purple-500/20 backdrop-blur-md border border-purple-500/50 w-10 h-10 rounded-full flex justify-center items-center shadow-[0_0_15px_rgba(145,94,255,0.3)]">
         <Award size={18} className="text-purple-300" />
       </div>
     </div>
 
-    {/* Text Section */}
     <div className="p-6 md:p-8 flex flex-col flex-grow relative z-20">
       <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-purple-400 transition-colors leading-tight">
         {cert.title}
@@ -103,20 +95,17 @@ const CertCard = ({ cert, index }) => (
 function Certification() {
   return (
     <section className="relative w-full min-h-screen py-20 overflow-hidden" id="certification">
-      
-      {/* Background Layer */}
       <div 
         className="absolute inset-0 z-[-1] pointer-events-none"
         style={{
           backgroundImage: `url(${background})`,
-          /* REMOVED backgroundAttachment: "fixed" to fix iOS Safari mobile bug */
+          backgroundAttachment: "fixed",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       />
 
-      {/* Animated Particles */}
       <div className="absolute inset-0 opacity-40 z-0 pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -141,14 +130,7 @@ function Certification() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Heading */}
-        <motion.div 
-          variants={textVariant()}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.1 }}
-          className="text-center mb-16 md:mb-24"
-        >
+        <motion.div variants={textVariant()} className="text-center mb-16 md:mb-24">
           <p className="text-sm md:text-base tracking-widest text-teal-300 font-mono uppercase mb-2">
             Continuous Learning
           </p>
@@ -159,12 +141,10 @@ function Certification() {
             initial={{ width: 0 }}
             whileInView={{ width: "100px" }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
             className="h-1 bg-gradient-to-r from-purple-500 to-cyan-500 mt-6 mx-auto rounded-full" 
           />
         </motion.div>
 
-        {/* Certifications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {certifications.map((cert, index) => (
             <CertCard key={cert.id} cert={cert} index={index} />

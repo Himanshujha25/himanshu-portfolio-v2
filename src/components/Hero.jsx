@@ -41,7 +41,7 @@ function Hero() {
 
       {/* ===== CONTENT ===== */}
       <div className={`${styles.paddingX} max-w-7xl mx-auto relative z-20 w-full`}>
-        {/* Changed to flex-col on mobile so Avatar sits beautifully on top */}
+        {/* Container naturally stacks Text first, then Avatar on mobile */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
           
           {/* ================= LEFT : PREMIUM GLASS CARD ================= */}
@@ -58,7 +58,7 @@ function Hero() {
               shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]
               overflow-hidden
               text-center lg:text-left
-              order-2 lg:order-1
+              /* Removed the order CSS here so it stays on top for mobile */
             "
           >
             {/* SUBTLE INNER LIGHTING */}
@@ -118,7 +118,7 @@ function Hero() {
 
           {/* ================= RIGHT : AVATAR ================= */}
           <motion.div
-            className="w-full lg:w-1/2 h-[350px] sm:h-[450px] lg:h-[650px] flex items-center justify-center relative z-20 order-1 lg:order-2"
+            className="w-full lg:w-1/2 h-[350px] sm:h-[450px] lg:h-[650px] flex items-center justify-center relative z-20"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{
               opacity: 1,
