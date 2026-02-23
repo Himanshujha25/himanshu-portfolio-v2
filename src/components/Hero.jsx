@@ -11,7 +11,11 @@ function Hero() {
       {/* ===== BACKGROUND ===== */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat lg:bg-fixed"
-        style={{ backgroundImage: `url(${background})` }}
+        style={{   backgroundImage: `url(${background})`,
+                backgroundAttachment: "fixed",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",}}
       />
 
       {/* ===== FLOATING PARTICLES ===== */}
@@ -58,7 +62,6 @@ function Hero() {
               shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]
               overflow-hidden
               text-center lg:text-left
-              /* Removed the order CSS here so it stays on top for mobile */
             "
           >
             {/* SUBTLE INNER LIGHTING */}
@@ -138,6 +141,11 @@ function Hero() {
 
         </div>
       </div>
+
+      {/* ===== SEAMLESS FADE OUT TRICK ===== */}
+      {/* This creates a smooth gradient at the very bottom of the Hero section to blur the line into the next section */}
+     
+
     </section>
   );
 }
