@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { SectionWrapper } from "../hoc";
 import { textVariant, fadeIn } from "../utils/motion";
 import background from "../assets/background.webp";
-// Importing a clean award icon
 import { Award } from "lucide-react";
 
 const certifications = [
@@ -66,6 +65,10 @@ const certifications = [
 const CertCard = ({ cert, index }) => (
   <motion.div
     variants={fadeIn("up", "spring", index * 0.1, 0.75)}
+    /* ADDED: Independent animation triggers to prevent the mobile height bug */
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.1 }}
     className="bg-[#151030]/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(145,94,255,0.3)] hover:border-purple-500/50 group flex flex-col h-full"
   >
     {/* Image Container with Blending Gradient */}
@@ -85,7 +88,7 @@ const CertCard = ({ cert, index }) => (
       </div>
     </div>
 
-    {/* Text Section (flex-grow ensures cards match heights) */}
+    {/* Text Section */}
     <div className="p-6 md:p-8 flex flex-col flex-grow relative z-20">
       <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-purple-400 transition-colors leading-tight">
         {cert.title}
@@ -106,7 +109,7 @@ function Certification() {
         className="absolute inset-0 z-[-1] pointer-events-none"
         style={{
           backgroundImage: `url(${background})`,
-          backgroundAttachment: "fixed",
+          /* REMOVED backgroundAttachment: "fixed" to fix iOS Safari mobile bug */
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -139,7 +142,13 @@ function Certification() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Heading */}
-        <motion.div variants={textVariant()} className="text-center mb-16 md:mb-24">
+        <motion.div 
+          variants={textVariant()}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+          className="text-center mb-16 md:mb-24"
+        >
           <p className="text-sm md:text-base tracking-widest text-teal-300 font-mono uppercase mb-2">
             Continuous Learning
           </p>
@@ -150,6 +159,7 @@ function Certification() {
             initial={{ width: 0 }}
             whileInView={{ width: "100px" }}
             transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
             className="h-1 bg-gradient-to-r from-purple-500 to-cyan-500 mt-6 mx-auto rounded-full" 
           />
         </motion.div>
